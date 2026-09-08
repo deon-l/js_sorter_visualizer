@@ -1,28 +1,21 @@
-export function* stoogeSort(array){
-    let stack = [[0, array.length]];
-
-    let data;
-    while ((data = stack.pop()) !== undefined) {
-        const start = data[0];
-        const end = data[1];
+export function* stoogeSort(array, start=0, end=array.length){
         const length = end - start;
 
         if (length <= 1) {
-            continue;
+            return;
         }
 
         yield* array.compareAndSwap(start, end - 1);
 
         if (length == 2) {
-            continue;
+            return;
         }
 
         const third = Math.floor(length / 3);
 
-        stack.push([start, end - third]);
-        stack.push([start + third, end]);
-        stack.push([start, end - third]);
-    }
+    yield* stoogeSort(array, start, end - third);
+    yield* stoogeSort(array, start + third, end);
+    yield* stoogeSort(array, start, end - third);
 }
 
 export function* slowSort(array) {

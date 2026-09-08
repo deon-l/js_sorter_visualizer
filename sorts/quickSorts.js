@@ -2,82 +2,70 @@ import { insertionSort } from "./insertion.js";
 import { heapSort } from "./selectionSorts.js";
 import { BarChange } from "../arrayTracer.js";
 
-export function* quickSort(array) {
+export function* quickSort(array, start=0, end=array.length) {
 
-    let stack = [[0, array.length]];
+    if (start >= end) {
+        return;
+    }
 
-    let data;
-    while ((data = stack.pop()) !== undefined) {
-        let start = data[0];
-        let end = data[1];
+    yield array.get(start);
+    let pivit = array.getVal;
 
-        if (start >= end) {
+    let startP = start;
+    let endP = end;
+    let startPVal = Number.NEGATIVE_INFINITY;
+    let endPVal = Number.POSITIVE_INFINITY;
+
+    
+    while (startP <= endP) {
+        if (startPVal < pivit) {
+            startP++;
+            yield array.get(startP);
+            startPVal = array.getVal;
             continue;
         }
 
-        yield array.get(start);
-        let pivit = array.getVal;
-
-        let startP = start;
-        let endP = end;
-        let startPVal = Number.NEGATIVE_INFINITY;
-        let endPVal = Number.POSITIVE_INFINITY;
-
-        
-        while (startP <= endP) {
-            if (startPVal < pivit) {
-                startP++;
-                yield array.get(startP);
-                startPVal = array.getVal;
-                continue;
-            }
-
-            if (endPVal >= pivit) {
-                endP--;
-                yield array.get(endP);
-                endPVal = array.getVal;
-                continue;
-            }
-
-            yield array.swap(startP, endP);
-            startPVal = Number.NEGATIVE_INFINITY;
-            endPVal = Number.POSITIVE_INFINITY;
+        if (endPVal >= pivit) {
+            endP--;
+            yield array.get(endP);
+            endPVal = array.getVal;
+            continue;
         }
 
-        yield array.swap(start, startP - 1);
-
-        stack.push([startP, end]);
-        stack.push([start, startP - 1]);
+        yield array.swap(startP, endP);
+        startPVal = Number.NEGATIVE_INFINITY;
+        endPVal = Number.POSITIVE_INFINITY;
     }
+
+    yield array.swap(start, startP - 1);
+
+    yield* quickSort(array, start, startP - 1);
+    yield* quickSort(array, startP, end);
 }
 
 export function* introspectiveSort(array) {
     const maxDepth = 2 * Math.log2(array.length);
-    let stack = [[0, array.length, 0]];
 
-    let data;
-    while ((data = stack.pop()) !== undefined) {
-        let start = data[0];
-        let end = data[1];
-        let depth = data[2];
+    yield* iteration(0, array.length, 0);
+    function* iteration(start, end, depth) {
         let half = Math.floor((start + end) / 2);
 
         // document.getElementById("output").textContent = "parse"
 
         if (start >= end) {
-            continue;
+            return;
         }
         if (end - start <= 16) {
             // insertion sort
             // let subArray = array.slice(start, end);
             // document.getElementById("output").textContent = subArray.length;
             yield* insertionSort(array.slice(start, end), 1);
-            continue;
+            return;
         }
         if (depth == maxDepth) {
             // heap sort
             yield* heapSort(array.slice(start, end));
-            continue;
+            return;
         }
 
         yield array.swap(start, half);
@@ -88,7 +76,6 @@ export function* introspectiveSort(array) {
         let endP = end;
         let startPVal = Number.NEGATIVE_INFINITY;
         let endPVal = Number.POSITIVE_INFINITY;
-
         
         while (startP <= endP) {
             if (startPVal < pivit) {
@@ -112,32 +99,34 @@ export function* introspectiveSort(array) {
 
         yield array.swap(start, startP - 1);
 
-        stack.push([startP, end, depth + 1]);
-        stack.push([start, startP - 1, depth + 1]);
+        depth += 1;
+        yield* iteration(start, startP - 1, depth);
+        yield* iteration(startP, end, depth);
     }
 }
 
 export function* pdqSort(array) {
     const BadPartitionMax = Math.log(array.length);
-    let stack = [[0, array.length, 0]];
+    // let stack = [[0, array.length, 0]];
     let medianResult = -1;
 
-    while (stack.length > 0)
+    yield* iteration(0, array.length, 0);
+    function* iteration(start, end, badPartitionCount) 
     {
-        let stackData = stack.pop();
-        let start = stackData[0];
-        let end = stackData[1];
-        let badPartitionCount = stackData[2];
+        // let stackData = stack.pop();
+        // let start = stackData[0];
+        // let end = stackData[1];
+        // let badPartitionCount = stackData[2];
 
-        document.getElementById("output").textContent = stackData;
+        // document.getElementById("output").textContent = stackData;
 
         let length = end - start;
         if (length <= 16) {
             if (length <= 0) {
-                continue;
+                return;
             }
             yield* insertionSort(array.slice(start, end));
-            continue;
+            return;
         }
 
         let middle = Math.floor((start + end) / 2);
@@ -241,17 +230,18 @@ export function* pdqSort(array) {
             badPartitionCount++;
             if (badPartitionCount > BadPartitionMax) {
                 yield* heapSort(array.slice(start, end));
-                continue;
+                return;
             }
 
             yield* deterministicShuffle(start, pivitI);
             yield* deterministicShuffle(pivitI + 1, end);
         }
 
-        stack.push([pivitI + 1, end, badPartitionCount]);
-        if (!partitionLeft) {
-            stack.push([start, pivitI, badPartitionCount]);
+        if (!partitionLeft)
+        {
+            yield* iteration(start, pivitI, badPartitionCount);
         }
+        yield* iteration(pivitI + 1, end, badPartitionCount);
     }
 
     function* findMedian(i1, i2, i3) {

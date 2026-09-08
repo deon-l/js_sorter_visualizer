@@ -2,35 +2,26 @@ import { binarySearch, debugPrint, reverse } from "./helper.js";
 import { binaryInsertionSort, insertionSort } from "./insertion.js";
 
 export function* mergeSort(array) {
-
-    let stack = [[0, array.length, 0]];
     let buffer = [];
     buffer.length = array.length;
 
-    while (stack.length > 0) {
-        let data = stack[stack.length - 1];
-        let start = data[0];
-        let end = data[1];
-        let step = data[2];
-        data[2]++;
+    yield* iteration(0, array.length);
+
+    function* iteration(start, end) {
+        // let data = stack[stack.length - 1];
+        // let start = data[0];
+        // let end = data[1];
+        // let step = data[2];
+        // data[2]++;
 
         if (end - start <= 1) {
-            stack.pop();
-            continue;
+            return;
         }
 
         let half = Math.floor((start + end) / 2);
-        if (step == 0) {
-            stack.push([start, half, 0]);
-            continue;
-        }
-        if (step == 1) {
-            stack.push([half, end, 0]);
-            continue;
-        }
+        yield* iteration(start, half);
+        yield* iteration(half, end);
 
-
-        // let bufferP = 0;
         let p1 = start;
         let p2 = half;
 
@@ -39,7 +30,6 @@ export function* mergeSort(array) {
         yield array.get(p2);
         let p2Val = array.getVal;
 
-        // let bufferLength = start - end;
         for (let i = 0; i < end - start; i++) {
             let nextVal;
 
@@ -67,7 +57,7 @@ export function* mergeSort(array) {
             yield array.set(i + start, buffer[i]);
         }
 
-        stack.pop();
+        return;
     }
 }
 
