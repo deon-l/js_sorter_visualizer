@@ -13,8 +13,8 @@ import { bubbleSort, cocktailSort, combSort } from "./sorts/bubbleSort.js";
 // https://developer.mozilla.org/en-US/docs/Learn_web_development/Extensions/Client-side_APIs/Drawing_graphics
 
 const canvas = document.querySelector(".myCanvas");
-const width = (canvas.width = window.innerWidth);
-const height = (canvas.height = window.innerHeight - canvas.getBoundingClientRect().top - 4);
+let width = (canvas.width = window.innerWidth);
+let height = (canvas.height = window.innerHeight - canvas.getBoundingClientRect().top - 4);
 const maxValue = 1024 * 8;
 
 const ctx = canvas.getContext("2d")
@@ -46,6 +46,16 @@ export function reset()
     console.log("reset");
     barsToReset.clear();
     defaultColorOverride.clear();
+
+    canvas.width = window.innerWidth = canvas.width;
+    height = (canvas.height = window.innerHeight - canvas.getBoundingClientRect().top - 4);
+    let dropdownOffset = document.getElementById("settings_dropdown").getBoundingClientRect().top
+        ;
+    console.log(dropdownOffset);
+    if (dropdownOffset !== undefined)
+    {
+        height += dropdownOffset;
+    }
 
     ctx.fillStyle = "rgb(0 0 0)";
     ctx.fillRect(0, 0, width, height);
