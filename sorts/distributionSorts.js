@@ -5,7 +5,6 @@ export function* radixSort(array) {
     const flag = base - 1;
     const buckets = [];
     buckets.length = base;
-    document.getElementById("output").textContent = (10 >> 0) & flag;
     for (let i = 0; i < base; i++) {
         buckets[i] = [];
     }
@@ -23,8 +22,8 @@ export function* radixSort(array) {
 
         for (let i2 = 0; i2 < array.length; i2++) {
             yield array.get(i2);
-            document.getElementById("output").textContent = ((array.getVal >> (i * baseDigits)) & flag) + " << " + (array.getVal >> (i * baseDigits)) + " << " + array.getVal;
             let index = (array.getVal >> (i * baseDigits)) & flag;
+            console.log(`original(${array.getVal}) => key(${index})`);
             if (buckets[index] === undefined) {
                 asdf();
             }
@@ -40,11 +39,10 @@ export function* radixSort(array) {
         let bucketSubI = 0;
         for (let i2 = 0; i2 < array.length; i2++) {
             
-            yield array.set(i2, buckets[bucketI][bucketSubI]);
             if (buckets[bucketI][bucketSubI] === undefined) {
-                document.getElementById("output").textContent = bucketI + " | " + bucketSubI + " | " + buckets[bucketI].length;
-                asbs();
+                throw new Error(`illegal bucket index values: bucket(${bucketI}) < ${buckets.length} | subbucketI(${bucketSubI}) < ${buckets[bucketI].length}`);
             }
+            yield array.set(i2, buckets[bucketI][bucketSubI]);
             bucketSubI++;
             while (bucketI < buckets.length && buckets[bucketI].length <= bucketSubI) {
                 bucketI++;

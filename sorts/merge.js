@@ -8,12 +8,6 @@ export function* mergeSort(array) {
     yield* iteration(0, array.length);
 
     function* iteration(start, end) {
-        // let data = stack[stack.length - 1];
-        // let start = data[0];
-        // let end = data[1];
-        // let step = data[2];
-        // data[2]++;
-
         if (end - start <= 1) {
             return;
         }
@@ -68,11 +62,9 @@ export function* iterativeMergeSort(array) {
     buffer.length = array.length;
 
     const nearest2Power = Math.floor(Math.log2(length))
-    // const scale = length / Math.pow(2, nearest2Power);
 
     for (let i = 0; i < nearest2Power; i++) {
         let subArrayCount = Math.pow(2, nearest2Power - i);
-        // let subArraySize = Math.pow(2, i) * scale;
         let subArraySize = length / subArrayCount;
 
         for (let i2 = 0; i2 < subArrayCount; i2 += 2) {
@@ -98,7 +90,6 @@ export function* iterativeMergeSort(array) {
             yield array.get(p2);
             let p2Val = array.getVal;
 
-            // let bufferLength = start - end;
             for (let i = 0; i < end - start1; i++) {
                 let nextVal;
 
@@ -139,7 +130,6 @@ export function* timSort(array) {
     let runStack = [];
     function getRunStart(i) {
         i += runStack.length - 1;
-        document.getElementById("output").textContent = `${runStack.length}, ${i}`;
 
         if (i < 0) {
             return 0;
@@ -179,7 +169,6 @@ export function* timSort(array) {
         
         const start = processI;
         yield* array.compare(processI, processI + 1);
-        document.getElementById("output").textContent = `${processI} = ${start}`;
         const sortAscending = array.getVal;
 
         yield array.get(start);
@@ -223,7 +212,6 @@ export function* timSort(array) {
             const run2 = getRunSize(-2);
             const run3 = getRunSize(-3);
 
-            // document.getElementById("output").textContent = `${run1}, ${run2}, ${run3}`;
             debugPrint(runStack);
 
             if (run2 > run1 && (run3 > run2 + run1 || run3 == Infinity)) {
@@ -231,7 +219,6 @@ export function* timSort(array) {
             }
 
             if (run1 < run3) {
-                document.getElementById("output").textContent = `${run1}, ${run2}, ${run3}`;
                 yield* merge(getRunStart(-2), getRunStart(-1), processI);
                 runStack.splice(-2, 1);
             } else {
@@ -249,7 +236,6 @@ export function* timSort(array) {
         
         if (run1 < run3) {
             yield* merge(getRunStart(-2), getRunStart(-1), length);
-            // debugPrint("hi");
             runStack.splice(-2, 1);
         } else {
             yield* merge(getRunStart(-3), getRunStart(-2), getRunStart(-1));
@@ -265,12 +251,11 @@ export function* timSort(array) {
     function* merge(start1, start2, end) {
         yield array.get(start2);
         yield* binarySearch(array.slice(start1, start2), array.getVal, function(v) { start1 = v + start1; });
-        // document.getElementById("output").textContent = `a ${start1}, ${start2}, ${end}`;
         yield array.get(start2 - 1);
         yield* binarySearch(array.slice(start2, end), array.getVal, function(v) { end = v + start2; },
             function(n1, n2) { return n1 < n2; } );
         
-        // debugPrint(`${start1}, ${start2}, ${end}`)
+        console.log(`${start1}, ${start2}, ${end}`)
 
         const size1 = start2 - start1;
         const size2 = end - start2;
@@ -295,7 +280,7 @@ export function* timSort(array) {
         let insertI = mergeRight ? start1 : end - 1;
 
         while (insertI < end && insertI >= start1) {
-            // debugPrint(`${insertI} < ${arrayI} ? ${bufferI} | ${arrayILow} - ${arrayIHigh} : ${bufferSize} | ${start1}, ${start2}, ${end}`);
+            console.log(`${insertI} < ${arrayI} ? ${bufferI} | ${arrayILow} - ${arrayIHigh} : ${bufferSize} | ${start1}, ${start2}, ${end}`);
             yield array.get(arrayI);
             if ((arrayILow <= arrayI && arrayI < arrayIHigh) && 
                 ((bufferI < 0 || bufferI >= bufferSize) || array.getVal * direction < buffer[bufferI] * direction)) {
@@ -309,8 +294,6 @@ export function* timSort(array) {
             insertI += direction;
             bufferI += direction;
         }
-
-        // debugPrint("hi");
     }
 }
 
@@ -336,10 +319,6 @@ export function* rotateMergeSort(array) {
         debugPrint(`Merging: ${start1} - ${start2} - ${end}`);
         const length1 = start2 - start1;
         const length2 = end - start2;
-        // if (length1 + length2 <= 16) {
-        //     yield* insertionSort(array.slice(start1, end));
-        //     return;
-        // }
         if (length1 == 0 || length2 == 0) {
             return;
         }
@@ -358,7 +337,6 @@ export function* rotateMergeSort(array) {
 
         if (middle2 != start2) {
             yield* rotation(array.slice(middle1, middle2), start2 - middle1);
-            // yield* rotate(middle1, start2, middle2);
         }
         start2 = middle1 + (middle2 - start2);
 

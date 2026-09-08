@@ -1,11 +1,5 @@
 export class ArrayTracer {
 
-    // items;
-    // start;
-    // end;
-    // skip;
-    // getVal;
-
     constructor(count)
     {
         this.items = [];

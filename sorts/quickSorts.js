@@ -50,20 +50,16 @@ export function* introspectiveSort(array) {
     function* iteration(start, end, depth) {
         let half = Math.floor((start + end) / 2);
 
-        // document.getElementById("output").textContent = "parse"
-
         if (start >= end) {
             return;
         }
         if (end - start <= 16) {
-            // insertion sort
-            // let subArray = array.slice(start, end);
-            // document.getElementById("output").textContent = subArray.length;
+            console.log(`Insertion sort on ${start}..${end}`);
             yield* insertionSort(array.slice(start, end), 1);
             return;
         }
         if (depth == maxDepth) {
-            // heap sort
+            console.log(`Heap sort on ${start}..${end}`);
             yield* heapSort(array.slice(start, end));
             return;
         }
@@ -107,19 +103,11 @@ export function* introspectiveSort(array) {
 
 export function* pdqSort(array) {
     const BadPartitionMax = Math.log(array.length);
-    // let stack = [[0, array.length, 0]];
     let medianResult = -1;
 
     yield* iteration(0, array.length, 0);
     function* iteration(start, end, badPartitionCount) 
     {
-        // let stackData = stack.pop();
-        // let start = stackData[0];
-        // let end = stackData[1];
-        // let badPartitionCount = stackData[2];
-
-        // document.getElementById("output").textContent = stackData;
-
         let length = end - start;
         if (length <= 16) {
             if (length <= 0) {
@@ -162,7 +150,6 @@ export function* pdqSort(array) {
         let swapCount = 0;
 
         while (true) {
-            // document.getElementById("output").textContent = "parse";
             while (startP < endP) {
                 yield array.get(startP);
                 if (array.getVal > pivit || (!partitionLeft && array.getVal == pivit)) {
@@ -193,8 +180,7 @@ export function* pdqSort(array) {
         pivitI = startP - 1;
 
         if (pivitI == end) {
-            document.getElementById("output").textContent = "errors be here";
-            asdf();
+            throw new Error(`pivitI(${pivitI}) == end(${end}) (should be smaller)`)
         }
 
         yield array.swap(start, pivitI);
@@ -274,7 +260,7 @@ export function* pdqSort(array) {
             return;
         }
         
-        document.getElementById("output").textContent = `${start} ${end}`;
+        console.log(`shuffling ${start}..${end}`);
 
         let quaterLength = Math.floor(length / 4);
         yield array.swap(start, start + quaterLength);
@@ -287,7 +273,5 @@ export function* pdqSort(array) {
             yield array.swap(end - 3, end - quaterLength - 2);
             
         }
-
-        document.getElementById("output").textContent = "finish shuffle";
     }
 }

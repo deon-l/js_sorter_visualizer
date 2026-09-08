@@ -10,7 +10,6 @@ export function setRunConcurrent(value) {
 
 
 class sortingNetwork {
-
     constructor() {
         this.operations = [];
     }
@@ -20,14 +19,11 @@ class sortingNetwork {
     }
 
     * execute(array) {
-        document.getElementById("output").textContent = runNetworksConcurrently;
-        // asdf;
         if (runNetworksConcurrently) {
             yield* this.executeConcurrently(array);
         } else {
             yield* this.executeSequentially(array);
         }
-        // abss();
     }
 
     * executeSequentially(array) {
@@ -35,11 +31,6 @@ class sortingNetwork {
         for (let i = 0; i < this.operations.length; i++) {
             const op = this.operations[i];
             const type = op[2];
-
-            // if (op[1] >= array.length) {
-            //     continue;
-            // }
-            // document.getElementById("output").textContent = `${op[0]} - ${op[1]}`;
 
             switch (type) {
                 case CompareOperation:
@@ -139,9 +130,7 @@ export function* bitonicSort(array) {
     }
 
     
-    // yield* network.executeSequentially(array);
     yield* network.execute(array);
-    // yield* insertionSort(array);
 }
 
 export function* BatcherOddEvenMergeSort(array) {

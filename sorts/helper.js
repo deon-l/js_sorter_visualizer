@@ -1,8 +1,6 @@
 
-const debug = document.getElementById("debug");
-
 export function debugPrint(what) {
-    debug.textContent = what;
+    console.log(what);
 }
 
 export function* reverse(array) {
@@ -16,7 +14,6 @@ export function* reverse(array) {
 export function* binarySearch(array, value, setter, comparer = function (n1, n2) { return n1 <= n2 }) {
     let low = 0;
     let high = array.length;
-    // debugPrint("hellO");
     while (low < high) {
         let middle = Math.floor((low + high) / 2);
         yield array.get(middle);

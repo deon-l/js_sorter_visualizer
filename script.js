@@ -28,13 +28,17 @@ export function setNewSpeed() {
         return;
     }
 
-    globalSpeedFactor = newSpeed;
-    // document.getElementById("output").textContent = globalSpeedFactor;
+    // just to prevent console spam.
+    if (newSpeed != globalSpeedFactor)
+    {
+        globalSpeedFactor = newSpeed;
+        console.log("new global speed factor: " + globalSpeedFactor);
+    }
 }
 
 export function reset()
 {
-    document.getElementById("output").textContent = "new";
+    console.log("reset");
     barsToReset.clear();
     defaultColorOverride.clear();
 
@@ -50,21 +54,15 @@ export function onClick()
     const generationMethod = document.getElementById("generationMethod").value;
     const sortingMethod = document.getElementById("sortingMethod").value;
 
-    // runNetworksConcurrently = false;
-    // runNetworksConcurrently = document.getElementById("concurrent_check").checked;
     setRunConcurrent(document.getElementById("concurrent_check").checked);
     
-    console.log(elementCount)
-    console.log(generationMethod)
-    console.log(sortingMethod)
+    console.log(`element count; ${elementCount}\ngen method: ${generationMethod}\nsort method: ${sortingMethod}`);
     
     const array = new ArrayTracer(elementCount);
-    // document.getElementById("output").textContent = sortingMethod;
     barWidth = width / elementCount;
     previousTime = undefined;
     stepTime = 60 / 10 * 128 / elementCount;
     barsToReset.length = 0;
-    iterations = 0;
 
     generator = getGenerators();
     requestAnimationFrame(drawIteration);
@@ -94,7 +92,6 @@ let barWidth = 0;
 let generator = null;
 let previousTime = undefined;
 let stepTime = 0;
-let iterations = 0;
 const barsToReset = new Map();
 const defaultColorOverride = new Map();
 function drawIteration(timestamp) {
@@ -109,26 +106,22 @@ function drawIteration(timestamp) {
         let duration = timestamp - previousTime;
         stepCount = Math.floor(duration * globalSpeedFactor / stepTime);
         previousTime += stepCount / globalSpeedFactor * stepTime;
-        // document.getElementById("output").textContent = `${globalSpeedFactor} | ${duration} > ${stepCount}`;
-    }    
-    
-    // document.getElementById("output").textContent = "c"
 
-    iterations++;
-    // document.getElementById("output").textContent = "t: " + iterations;
+        // commenting out to avoid console spam, uncomment if needed.
+        // console.log(`speed(${globalSpeedFactor}) x duration(${duration}) = steps(${stepCount})`);
+    }
+
     if (stepCount != 0) {
         clearDiscolored()
     }
     
-    // document.getElementById("output").textContent = "butane";
     for (let i = 0; i < stepCount; i++) {
         
         const data = generator.next();
         
-        // document.getElementById("output").textContent = iterations + "" + data.done;
         if (data.done) {
             clearDiscolored();
-            document.getElementById("output").textContent = "return";
+            console.log("done");
             return;
         } 
         
@@ -180,7 +173,6 @@ function drawBar(index, barHeight, color) {
     let actualHeight = barHeight / maxValue * height;
     let startX = Math.round(index * barWidth);
     let endX = Math.round((index + 1) * barWidth);
-    // let endX = startX + barWidth;
     ctx.fillRect(startX, height - actualHeight, endX - startX, height);
 }
 

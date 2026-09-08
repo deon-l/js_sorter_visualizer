@@ -1,8 +1,6 @@
 
 export function* insertionSort(array, gap = 1)
 {
-    // document.getElementById("output").textContent = "parse";
-
     const length = array.length;
 
     for (let i = gap; i < length; i++)

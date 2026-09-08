@@ -260,7 +260,5 @@ export function* originalBlockSort(array) {
             }
             gap++;
         }
-
-
     }
 }
