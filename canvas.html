@@ -13,8 +13,6 @@
                 <td>Element Count</td>
                 <td>Generation Method</td>
                 <td>Sorting Method</td>
-                <td><span id="concurrent_label">Run Concurrently</span></td>
-                <td>Speed Factor</td>
             </tr>
             <tr>
                 <td><input type="number" id="elementCount" value="128" min="1"/></td>
@@ -61,16 +59,32 @@
                 </td>
                 <td>
                     <!-- <label class="switch"> -->
-                        <input  id="concurrent_check" type="checkbox">
                         <!-- <span class="slider round"></span> -->
                     <!-- </label> -->
                 </td>
-                <td>
+                <!-- <td>
                     <input type="number" id="speedFactor" value="1" min="0" onclick="module.newSpeed()"/>
-                </td>
+                </td> -->
             </tr>
         </table>
-
+        <div>
+            <img src="images/cog.svg" alt="setting's cog" height="13">
+            <input type="checkbox" id="settings_check" onclick="display_dropdown()">
+            <ui class="dropdown" id="settings_dropdown">
+                <li>Speed Factor: <input type="number" id="speedFactor" value="1" min="0" onclick="module.newSpeed()"/></li>
+                <li id="concurrent_label">Run Concurrently: <input id="concurrent_check" type="checkbox"> </li>
+            </ui>
+            <script>
+                function display_dropdown() {
+                    if (input = document.getElementById("settings_check").checked) {
+                    document.getElementById("settings_dropdown").style.display = "block"
+                    }
+                    else {
+                        document.getElementById("settings_dropdown").style.display = "none"
+                    }
+                }
+            </script>
+        </div>
         <button type="button" id="runButton" onclick="module.onClick()">Run</button>
         
         <span id="output">original</span> 
@@ -96,10 +110,7 @@
                         break;
                 }
 
-                document.getElementById("concurrent_check").style.display = value;
                 document.getElementById("concurrent_label").style.display = value;
-// 
-                // document.getElementById("output").textContent = document.getElementById("concurrent_check").checked;
             }
         </script>
         <script type="module" defer>
