@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en-US">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Canvas</title>
+        <link href="style.css" rel="stylesheet">
+    </head>
+    <body>
+        
+        <table>
+            <tr>
+                <td>Element Count</td>
+                <td>Generation Method</td>
+                <td>Sorting Method</td>
+                <td><span id="concurrent_label">Run Concurrently</span></td>
+                <td>Speed Factor</td>
+            </tr>
+            <tr>
+                <td><input type="number" id="elementCount" value="128" min="1"/></td>
+                <td>
+                    <select id="generationMethod">
+                        <option value="random">Random</option>
+                        <option value="exponential">Random Exponential</option>
+                        <option value="sqrt">Random Square Root</option>
+                        <option value="almost">Almost Sorted</option>
+                        <option value="reverse">Reverse</option>
+                        <option value="spikes">Spikes</option>
+                        <option value="pipeOrgan">Pipe Organ</option>
+                        <option value="runs">Random Runs</option>
+                    </select>
+                </td>
+                <td>
+                    <select id="sortingMethod" onclick="checkConcurrentVisibility()">
+                        <option value="bubble">Bubble Sort</option>
+                        <option value="insertion">Insertion Sort</option>
+                        <option value="selection">Selection Sort</option>
+                        <option value="cocktail">Cocktail Sort</option>
+                        <option value="comb">Comb Sort</option>
+                        <option value="shell">Shell Sort</option>
+                        <option value="heap">Heap Sort</option>
+                        <option value="binary_insertion">Binary Insertion Sort</option>
+                        <option value="weak_heap">Weak Heap Sort</option>
+                        <option value="smooth">Smooth Sort</option>
+                        <option value="quick">Quick Sort</option>
+                        <option value="introspective">Introspective Sort</option>
+                        <option value="pdq">Pattern Defeating Quick Sort</option>
+                        <option value="merge">Merge Sort</option>
+                        <option value="iterative_merge">Iterative Merge Sort</option>
+                        <option value="tim">Tim Sort</option>
+                        <option value="rotate">Rotate Merge Sort</option>
+                        <option value="radix">Radix Sort</option>
+                        <option value="counting">Counting Sort</option>
+                        <option value="bitonic">Bitonic Sort</option>
+                        <option value="boem">Batcher Odd-Even Merge Sort</option>
+                        <option value="sqrt">Sqrt Sort</option>
+                        <option value="stooge">Stooge Sort</option>
+                        <option value="slow">Slow Sort</option>
+                        <option value="bogo">Bogo Sort</option>
+                    </select>
+                </td>
+                <td>
+                    <!-- <label class="switch"> -->
+                        <input  id="concurrent_check" type="checkbox">
+                        <!-- <span class="slider round"></span> -->
+                    <!-- </label> -->
+                </td>
+                <td>
+                    <input type="number" id="speedFactor" value="1" min="0" onclick="module.newSpeed()"/>
+                </td>
+            </tr>
+        </table>
+
+        <button type="button" id="runButton" onclick="module.onClick()">Run</button>
+        
+        <span id="output">original</span> 
+        |
+        <span id="debug">debug output</span>
+
+        <canvas class="myCanvas">
+        </canvas>
+
+        <script>
+            const module = {};
+
+            function checkConcurrentVisibility() {
+                const sortingMethod = document.getElementById("sortingMethod").value;
+                let value;
+                switch (sortingMethod) {
+                    case "bitonic":
+                    case "boem":
+                        value = "block";
+                        break;
+                    default:
+                        value = "none";
+                        break;
+                }
+
+                document.getElementById("concurrent_check").style.display = value;
+                document.getElementById("concurrent_label").style.display = value;
+// 
+                // document.getElementById("output").textContent = document.getElementById("concurrent_check").checked;
+            }
+        </script>
+        <script type="module" defer>
+            import { reset, onClick, setNewSpeed } from "./script.js";
+
+            checkConcurrentVisibility();
+
+            reset();
+            module.onClick = onClick;
+            module.newSpeed = setNewSpeed;
+        </script>
+    </body>
+</html>
