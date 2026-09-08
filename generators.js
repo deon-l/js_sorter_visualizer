@@ -5,10 +5,10 @@ export function* randomize(array, maxValue) {
         yield array.set(i, Math.floor((i + 1) / array.length * maxValue));
     }
         
-	for (let i = 0; i < array.length - 1; i++) {
+    for (let i = 0; i < array.length - 1; i++) {
         let swapI = i + Math.floor(Math.random() * (array.length - i));
-		yield array.swap(i, swapI);
-	}
+        yield array.swap(i, swapI);
+    }
 }
 
 export function* almostSorted(array, maxValue) {
@@ -29,20 +29,20 @@ export function* randomExponential(array, maxValue) {
         yield array.set(i, Math.floor(Math.pow(maxValue, (i + 1) / array.length)));
     }
         
-	for (let i = 0; i < array.length - 1; i++) {
+    for (let i = 0; i < array.length - 1; i++) {
         let swapI = i + Math.floor(Math.random() * (array.length - i));
-		yield array.swap(i, swapI);
-	} 
+        yield array.swap(i, swapI);
+    } 
 }
 export function* randomSquareRoot(array, maxValue) {
     for (let i = 0; i < array.length; i++) {
         yield array.set(i, Math.floor(Math.sqrt((i + 1) / array.length) * (maxValue - 1) + 1));
     }
         
-	for (let i = 0; i < array.length - 1; i++) {
+    for (let i = 0; i < array.length - 1; i++) {
         let swapI = i + Math.floor(Math.random() * (array.length - i));
-		yield array.swap(i, swapI);
-	} 
+        yield array.swap(i, swapI);
+    } 
 }
 
 export function* reverse(array, maxValue) {

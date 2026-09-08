@@ -60,15 +60,15 @@ export function onClick()
     
     const array = new ArrayTracer(elementCount);
     // document.getElementById("output").textContent = sortingMethod;
-	barWidth = width / elementCount;
-	previousTime = undefined;
-	stepTime = 60 / 10 * 128 / elementCount;
+    barWidth = width / elementCount;
+    previousTime = undefined;
+    stepTime = 60 / 10 * 128 / elementCount;
     barsToReset.length = 0;
     iterations = 0;
 
-	generator = getGenerators();
-	requestAnimationFrame(drawIteration);
-	
+    generator = getGenerators();
+    requestAnimationFrame(drawIteration);
+    
     function* getGenerators() {
         const gen_iterator = getGenerationMethod(generationMethod)(array, maxValue);
         if (document.getElementById("skip_gen_toggle").checked)
@@ -84,7 +84,7 @@ export function onClick()
         {
             yield* gen_iterator;
         }
-		yield* getSortingAlgorithm(sortingMethod)(array);
+        yield* getSortingAlgorithm(sortingMethod)(array);
     }
     
 }
@@ -119,7 +119,7 @@ function drawIteration(timestamp) {
     if (stepCount != 0) {
         clearDiscolored()
     }
-	
+    
     // document.getElementById("output").textContent = "butane";
     for (let i = 0; i < stepCount; i++) {
         
@@ -131,19 +131,19 @@ function drawIteration(timestamp) {
             document.getElementById("output").textContent = "return";
             return;
         } 
-		
+        
         const barChanges = data.value;
 
-		for (let i2 = 0; i2 < barChanges.length; i2++) {
+        for (let i2 = 0; i2 < barChanges.length; i2++) {
             let barChange = barChanges[i2];
-			drawBar(barChange.index, maxValue, "rgb(0 0 0)");
+            drawBar(barChange.index, maxValue, "rgb(0 0 0)");
 
             if (barChange.color.length == 0) {
                 barChange.color = defaultColor(barChange.value);
                 defaultColorOverride.delete(barChange.index);
             }
 
-			drawBar(barChange.index, barChange.value, barChange.color);
+            drawBar(barChange.index, barChange.value, barChange.color);
             
             if (barChange.persists != -1) {
                 barsToReset.set(barChange.index, barChange)
@@ -153,9 +153,9 @@ function drawIteration(timestamp) {
                 defaultColorOverride.set(barChange.index, barChange.color);
             }
         }
-		
+        
     }
-	
+    
     requestAnimationFrame(drawIteration)
 }
 
@@ -185,7 +185,7 @@ function drawBar(index, barHeight, color) {
 }
 
 function defaultColor(value) {
-	return `hsl(${value / maxValue * 360} 100% 50%)`
+    return `hsl(${value / maxValue * 360} 100% 50%)`
 }
 
 function getGenerationMethod(key) {
