@@ -73,6 +73,9 @@
             <ui class="dropdown" id="settings_dropdown">
                 <li>Speed Factor: <input type="number" id="speedFactor" value="1" min="0" onclick="module.newSpeed()"/></li>
                 <li id="concurrent_label">Run Concurrently: <input id="concurrent_check" type="checkbox"> </li>
+                <li>
+                    Skip Generation: <input id="skip_gen_toggle" type="checkbox">
+                </li>
             </ui>
             <script>
                 function display_dropdown() {

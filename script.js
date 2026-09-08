@@ -69,11 +69,22 @@ export function onClick()
 	generator = getGenerators();
 	requestAnimationFrame(drawIteration);
 	
-	function* getGenerators() {
-        yield* getGenerationMethod(generationMethod)(array, maxValue);
+    function* getGenerators() {
+        const gen_iterator = getGenerationMethod(generationMethod)(array, maxValue);
+        if (document.getElementById("skip_gen_toggle").checked)
+        {
+            let changes = [];
+            for (const current_changes of gen_iterator) {
+                changes = changes.concat(current_changes);
+                console.log(changes);
+            }
+            yield changes;
+        }
+        else
+        {
+            yield* gen_iterator;
+        }
 		yield* getSortingAlgorithm(sortingMethod)(array);
-
-        // yield* rotation(array, Math.floor(array.length / 2 + 10))
     }
     
 }
