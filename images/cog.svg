@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="78.621727mm"
+   height="78.571732mm"
+   viewBox="0 0 78.621727 78.571732"
+   version="1.1"
+   id="svg1"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs1" />
+  <g
+     id="layer1"
+     transform="translate(-82.453758,-98.857008)">
+    <circle
+       style="fill:none;fill-opacity:0.450151;stroke:#000000;stroke-width:15;stroke-miterlimit:10;stroke-dasharray:none"
+       id="path1"
+       cx="121.71639"
+       cy="138.12975"
+       r="20" />
+    <g
+       id="g1"
+       style="stroke-linecap:square;stroke-linejoin:miter">
+      <rect
+         style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:10;stroke-dasharray:none"
+         id="rect1"
+         width="10.579672"
+         height="19.272736"
+         x="116.42656"
+         y="98.85701" />
+      <use
+         x="0"
+         y="0"
+         xlink:href="#rect1"
+         id="use2"
+         transform="rotate(179.71305,121.66631,138.12975)" />
+    </g>
+    <use
+       x="0"
+       y="0"
+       xlink:href="#g1"
+       id="use6"
+       transform="rotate(134.9904,121.76498,138.1421)" />
+    <use
+       x="0"
+       y="0"
+       xlink:href="#g1"
+       id="use7"
+       transform="rotate(42.181826,121.76582,138.14553)" />
+    <use
+       x="0"
+       y="0"
+       xlink:href="#g1"
+       id="use8"
+       transform="rotate(89.721639,121.76462,138.14288)" />
+  </g>
+</svg>
