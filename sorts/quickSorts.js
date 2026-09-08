@@ -184,7 +184,7 @@ export function* pdqSort(array) {
         }
 
         yield array.swap(start, pivitI);
-        yield [new BarChange("rgb(256 256 256)", pivitI, pivit, -1)]
+        // yield [new BarChange("rgb(256 256 256)", pivitI, pivit, -1)]
 
         if (swapCount == 0) {
             // optimistic insertion sort

@@ -28,6 +28,11 @@ export function setNewSpeed() {
         return;
     }
 
+    if (newSpeed > globalSpeedFactor && newSpeed >= 10000)
+    {
+        slowdownFactor *= Math.pow(Math.min(10000, globalSpeedFactor) / newSpeed, 2);
+    }
+
     // just to prevent console spam.
     if (newSpeed != globalSpeedFactor)
     {
@@ -44,6 +49,11 @@ export function reset()
 
     ctx.fillStyle = "rgb(0 0 0)";
     ctx.fillRect(0, 0, width, height);
+    slowdownFactor = 1;
+    if (globalSpeedFactor > 5000)
+    {
+        slowdownFactor = Math.pow(100 / globalSpeedFactor, 2);
+    }
 }
 
 export function onClick()
@@ -92,8 +102,11 @@ let barWidth = 0;
 let generator = null;
 let previousTime = undefined;
 let stepTime = 0;
+let slowdownFactor = 1;
 const barsToReset = new Map();
 const defaultColorOverride = new Map();
+const minFps = 30;
+const maxDelta = 1 / minFps * 1000;
 function drawIteration(timestamp) {
     let stepCount = 0;
     setNewSpeed();
@@ -104,11 +117,20 @@ function drawIteration(timestamp) {
         stepCount = 1;
     } else {
         let duration = timestamp - previousTime;
-        stepCount = Math.floor(duration * globalSpeedFactor / stepTime);
-        previousTime += stepCount / globalSpeedFactor * stepTime;
+        if (duration > maxDelta)
+        {
+            slowdownFactor *= Math.pow(maxDelta / duration, 2);
+        }
+        else if (slowdownFactor < 1)
+        {
+            slowdownFactor += (1 - slowdownFactor) * duration / maxDelta / 10;
+            slowdownFactor = Math.min(1, slowdownFactor);
+        }
+        stepCount = Math.floor(duration * slowdownFactor * globalSpeedFactor / stepTime);
+        previousTime += stepCount / globalSpeedFactor * stepTime / slowdownFactor;
 
         // commenting out to avoid console spam, uncomment if needed.
-        // console.log(`speed(${globalSpeedFactor}) x duration(${duration}) = steps(${stepCount})`);
+        // console.log(`speed(${globalSpeedFactor * slowdownFactor}) x duration(${duration}) = steps(${stepCount})`);
     }
 
     if (stepCount != 0) {
