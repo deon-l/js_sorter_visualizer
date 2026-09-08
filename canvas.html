@@ -68,7 +68,8 @@
             </tr>
         </table>
         <div>
-            <img src="images/cog.svg" alt="setting's cog" height="13">
+            <button type="button" id="runButton" onclick="module.onClick()">Run</button>
+            <img id="settings_img" src="images/cog.svg" alt="setting's cog" height="13">
             <input type="checkbox" id="settings_check" onclick="display_dropdown()">
             <ui class="dropdown" id="settings_dropdown">
                 <li>Speed Factor: <input type="number" id="speedFactor" value="1" min="0" onclick="module.newSpeed()"/></li>
@@ -80,7 +81,7 @@
             <script>
                 function display_dropdown() {
                     if (input = document.getElementById("settings_check").checked) {
-                    document.getElementById("settings_dropdown").style.display = "block"
+                        document.getElementById("settings_dropdown").style.display = "block"
                     }
                     else {
                         document.getElementById("settings_dropdown").style.display = "none"
@@ -88,7 +89,6 @@
                 }
             </script>
         </div>
-        <button type="button" id="runButton" onclick="module.onClick()">Run</button>
 
         <canvas class="myCanvas">
         </canvas>

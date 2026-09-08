@@ -5,4 +5,14 @@ body {
 
 .dropdown {
   display: none;
+  list-style-type: none;
+  padding-left: 1cm;
+}
+
+#settings_img {
+  padding-left:1cm
+}
+
+#settings_dropdown {
+  padding-left: 3cm
 }

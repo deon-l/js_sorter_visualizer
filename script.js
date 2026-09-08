@@ -48,14 +48,14 @@ export function reset()
     defaultColorOverride.clear();
 
     canvas.width = window.innerWidth = canvas.width;
-    height = (canvas.height = window.innerHeight - canvas.getBoundingClientRect().top - 4);
-    let dropdownOffset = document.getElementById("settings_dropdown").getBoundingClientRect().top
-        ;
+    height = window.innerHeight - canvas.getBoundingClientRect().top - 4;
+    let dropdownOffset = document.getElementById("settings_dropdown").clientHeight;
     console.log(dropdownOffset);
     if (dropdownOffset !== undefined)
     {
         height += dropdownOffset;
     }
+    canvas.height = height;
 
     ctx.fillStyle = "rgb(0 0 0)";
     ctx.fillRect(0, 0, width, height);
