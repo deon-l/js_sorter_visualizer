@@ -115,7 +115,7 @@ let stepTime = 0;
 let slowdownFactor = 1;
 const barsToReset = new Map();
 const defaultColorOverride = new Map();
-const minFps = 30;
+const minFps = 10;
 const maxDelta = 1 / minFps * 1000;
 function drawIteration(timestamp) {
     let stepCount = 0;
@@ -127,14 +127,24 @@ function drawIteration(timestamp) {
         stepCount = 1;
     } else {
         let duration = timestamp - previousTime;
-        if (duration > maxDelta)
-        {
+        console.log(maxDelta, "| duration: ", duration, " | slowdown", slowdownFactor, "| fps: ", 1000 / duration);
+        if (duration > maxDelta) {
             slowdownFactor *= Math.pow(maxDelta / duration, 2);
+            if (slowdownFactor < Number.EPSILON) {
+                slowdownFactor = Number.EPSILON
+            }
         }
-        else if (slowdownFactor < 1)
-        {
-            slowdownFactor += (1 - slowdownFactor) * duration / maxDelta / 10;
-            slowdownFactor = Math.min(1, slowdownFactor);
+        else if (slowdownFactor < 1) {
+            slowdownFactor += (1 - slowdownFactor) * Math.pow(1 - duration / maxDelta, 2) / 100;
+
+            slowdownFactor = Math.max(Number.EPSILON, Math.min(1, slowdownFactor));
+            if (1 - slowdownFactor <= Number.EPSILON)
+            {
+                slowdownFactor = 1;
+            }
+        }
+        if (slowdownFactor === NaN) {
+            slowdownFactor = Number.EPSILON;
         }
         stepCount = Math.floor(duration * slowdownFactor * globalSpeedFactor / stepTime);
         previousTime += stepCount / globalSpeedFactor * stepTime / slowdownFactor;
