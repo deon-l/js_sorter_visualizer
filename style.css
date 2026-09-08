@@ -10,9 +10,11 @@ body {
 }
 
 #settings_img {
-  padding-left:1cm
+  padding-left:1cm;
 }
 
 #settings_dropdown {
-  padding-left: 3cm
+  padding-left: 3cm;
+  background-color: rgb(60, 60, 60);
+  color:white
 }
