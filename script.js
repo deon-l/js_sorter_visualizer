@@ -28,9 +28,9 @@ export function setNewSpeed() {
         return;
     }
 
-    if (newSpeed > globalSpeedFactor && newSpeed >= 10000)
+    if (newSpeed > globalSpeedFactor && newSpeed >= 100)
     {
-        slowdownFactor *= Math.pow(Math.min(10000, globalSpeedFactor) / newSpeed, 2);
+        slowdownFactor *= Math.pow(Math.min(100, globalSpeedFactor) / newSpeed, 2);
     }
 
     // just to prevent console spam.
@@ -128,26 +128,18 @@ function drawIteration(timestamp) {
     } else {
         let duration = timestamp - previousTime;
         console.log(maxDelta, "| duration: ", duration, " | slowdown", slowdownFactor, "| fps: ", 1000 / duration);
-        if (duration > maxDelta) {
-            slowdownFactor *= Math.pow(maxDelta / duration, 2);
-            if (slowdownFactor < Number.EPSILON) {
-                slowdownFactor = Number.EPSILON
-            }
-        }
-        else if (slowdownFactor < 1) {
-            slowdownFactor += (1 - slowdownFactor) * Math.pow(1 - duration / maxDelta, 2) / 100;
-
+        if (duration != 0)
+        {
+            const difference = slowdownFactor * maxDelta / duration - slowdownFactor;
+            slowdownFactor += difference / 1.3;
             slowdownFactor = Math.max(Number.EPSILON, Math.min(1, slowdownFactor));
-            if (1 - slowdownFactor <= Number.EPSILON)
-            {
-                slowdownFactor = 1;
-            }
         }
         if (slowdownFactor === NaN) {
             slowdownFactor = Number.EPSILON;
         }
-        stepCount = Math.floor(duration * slowdownFactor * globalSpeedFactor / stepTime);
-        previousTime += stepCount / globalSpeedFactor * stepTime / slowdownFactor;
+        stepCount = duration * globalSpeedFactor / stepTime;
+        previousTime += Math.floor(stepCount) / globalSpeedFactor * stepTime;
+        stepCount = Math.floor(stepCount * slowdownFactor);
 
         // commenting out to avoid console spam, uncomment if needed.
         // console.log(`speed(${globalSpeedFactor * slowdownFactor}) x duration(${duration}) = steps(${stepCount})`);
