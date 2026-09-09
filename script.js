@@ -28,9 +28,9 @@ export function setNewSpeed() {
         return;
     }
 
-    if (newSpeed > globalSpeedFactor && newSpeed >= 10000)
+    if (newSpeed > globalSpeedFactor && newSpeed >= 100)
     {
-        slowdownFactor *= Math.pow(Math.min(10000, globalSpeedFactor) / newSpeed, 2);
+        slowdownFactor *= Math.pow(Math.min(100, globalSpeedFactor) / newSpeed, 2);
     }
 
     // just to prevent console spam.
@@ -46,6 +46,7 @@ export function reset()
     console.log("reset");
     barsToReset.clear();
     defaultColorOverride.clear();
+    meanDurationList.splice(0, Infinity);
 
     canvas.width = window.innerWidth = canvas.width;
     height = window.innerHeight - canvas.getBoundingClientRect().top - 4;
@@ -115,8 +116,10 @@ let stepTime = 0;
 let slowdownFactor = 1;
 const barsToReset = new Map();
 const defaultColorOverride = new Map();
-const minFps = 30;
+const minFps = 10;
 const maxDelta = 1 / minFps * 1000;
+const meanDurationList = [];
+const meanDurationListCount = 10;
 function drawIteration(timestamp) {
     let stepCount = 0;
     setNewSpeed();
@@ -127,17 +130,31 @@ function drawIteration(timestamp) {
         stepCount = 1;
     } else {
         let duration = timestamp - previousTime;
-        if (duration > maxDelta)
+
+        if (meanDurationList.length >= meanDurationListCount)
         {
-            slowdownFactor *= Math.pow(maxDelta / duration, 2);
+            meanDurationList.splice(0, 1);
         }
-        else if (slowdownFactor < 1)
+        meanDurationList.push(duration)
+        
+        let meanDuration = 0;
+        for (const value of meanDurationList) {
+            meanDuration += value;
+        }
+        meanDuration /= meanDurationList.length;
+
+        if (duration != 0)
         {
-            slowdownFactor += (1 - slowdownFactor) * duration / maxDelta / 10;
-            slowdownFactor = Math.min(1, slowdownFactor);
+            const difference = slowdownFactor * maxDelta / Math.max(meanDuration, duration) - slowdownFactor;
+            slowdownFactor += difference / 1.3;
+            slowdownFactor = Math.max(Number.EPSILON, Math.min(1, slowdownFactor));
         }
-        stepCount = Math.floor(duration * slowdownFactor * globalSpeedFactor / stepTime);
-        previousTime += stepCount / globalSpeedFactor * stepTime / slowdownFactor;
+        if (slowdownFactor === NaN) {
+            slowdownFactor = Number.EPSILON;
+        }
+        stepCount = duration * globalSpeedFactor / stepTime;
+        previousTime += Math.floor(stepCount) / globalSpeedFactor * stepTime;
+        stepCount = Math.floor(stepCount * slowdownFactor);
 
         // commenting out to avoid console spam, uncomment if needed.
         // console.log(`speed(${globalSpeedFactor * slowdownFactor}) x duration(${duration}) = steps(${stepCount})`);
