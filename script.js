@@ -46,6 +46,7 @@ export function reset()
     console.log("reset");
     barsToReset.clear();
     defaultColorOverride.clear();
+    meanDurationList.splice(0, Infinity);
 
     canvas.width = window.innerWidth = canvas.width;
     height = window.innerHeight - canvas.getBoundingClientRect().top - 4;
@@ -117,6 +118,8 @@ const barsToReset = new Map();
 const defaultColorOverride = new Map();
 const minFps = 10;
 const maxDelta = 1 / minFps * 1000;
+const meanDurationList = [];
+const meanDurationListCount = 10;
 function drawIteration(timestamp) {
     let stepCount = 0;
     setNewSpeed();
@@ -127,10 +130,22 @@ function drawIteration(timestamp) {
         stepCount = 1;
     } else {
         let duration = timestamp - previousTime;
-        console.log(maxDelta, "| duration: ", duration, " | slowdown", slowdownFactor, "| fps: ", 1000 / duration);
+
+        if (meanDurationList.length >= meanDurationListCount)
+        {
+            meanDurationList.splice(0, 1);
+        }
+        meanDurationList.push(duration)
+        
+        let meanDuration = 0;
+        for (const value of meanDurationList) {
+            meanDuration += value;
+        }
+        meanDuration /= meanDurationList.length;
+
         if (duration != 0)
         {
-            const difference = slowdownFactor * maxDelta / duration - slowdownFactor;
+            const difference = slowdownFactor * maxDelta / Math.max(meanDuration, duration) - slowdownFactor;
             slowdownFactor += difference / 1.3;
             slowdownFactor = Math.max(Number.EPSILON, Math.min(1, slowdownFactor));
         }
